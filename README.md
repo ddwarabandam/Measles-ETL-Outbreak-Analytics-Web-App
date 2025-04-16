@@ -137,8 +137,8 @@ Key Features:
 
 ## 📊 ETL App Instructions
 
-1. Visit the ETL app: `https://your-etl-app-url`
-2. Upload the Excel file(s) downloaded from CRF app
+1. Visit the ETL app: https://dattatechddwarabandam.shinyapps.io/NEMeasleswebETLalpha/
+2. Upload the combined_cases.xlsx Excel file(s) appended after downloading the case files from CRF app
 3. Review cleaned data table
 4. Scroll to:
    - **Summary Frequency Tables**
@@ -146,8 +146,8 @@ Key Features:
    - **Interactive Epidemic Curves**
    - **Gantt Charts of Contagious Period**
    - **Rt Estimation Over Time**
-   - **14-Day Forecast (Fixed Rt = 1.2)**
-   - **Scenario Modeling (Rt = 1.2, 1.4, 1.6)**
+   - **14-Day Forecast (Fixed Rt = 1.3)**
+   - **Scenario Modeling (Rt = 1.3, 1.5, 1.6)**
    - **Custom Scenario Inputs**
 
 ---
@@ -162,7 +162,7 @@ If a case needs follow-up data entry (e.g., now confirmed or hospitalized), the 
 🟡 **Leave previously entered fields blank**  
 🟡 Download this updated `.xlsx` row
 
-> The ETL app will simply append the updated row. Review teams can later merge/edit in Excel using filters or `case_id` match.
+> The Auto R script or Excel Power Query will simply append the updated row to the combined cases xlsx file. Review teams can later merge/edit in Excel using filters or `case_id` match.
 
 ---
 
@@ -205,8 +205,6 @@ estimate_R(
 )
 ```
 ## 📐 Serial Interval (SI) Settings for Measles
-
-Parameter	Value	Why?
 
 Parameter | Value | Why?
 --- | --- | ---
@@ -469,7 +467,7 @@ Each scenario displays:
 
 - 95% Credible Interval (shaded)
 
-- projected over 14 days
+- projected over 14 days via 5000 simulation (sims) runs (sims can be adjusted as per computing needs)
 
 These projections help visualize worst-case, expected, and best-case spread under each scenario.
 
@@ -478,7 +476,7 @@ You can:
 
 - Download, pan, zoom, drag or do several other actions on the plot as per Plotly interactive commands permit
 
-- Use download png or jpeg plots with labels in briefings or meetings
+- Use downloaded png or jpeg plots with labels in briefings or meetings as deemed necessary
 
 - Simulate "what-if" interventions (e.g., Rt drops due to vaccination or masking)
 
@@ -508,10 +506,11 @@ flowchart TD
   A[CRF App] --> B[Enter & Save Case]
   B --> C[Download Excel File]
   C --> D[Securely Store]
-  D --> E[Open ETL App]
-  E --> F[Upload .xlsx File]
-  F --> G[Clean & Visualize]
-  G --> H[Rt, Gantt, Projections]
+  D --> E[Combine Cases via R script or Excel]
+  E --> F[Open ETL App]
+  F --> G[Upload combined_cases.xlsx File]
+  G --> H[Clean & Visualize]
+  H --> I[Summary Tables, Epicurves, Rt, Gantt, Scenario Projections]
 ```
 
 ---
@@ -607,7 +606,10 @@ flowchart TD
 
 - Written in **R + Shiny**  
 - Uses `{plotly}`, `{ggplot2}`, `{DT}`, `{EpiEstim}`, `{projections}`, `{incidence}`, see packages list above  
-- For custom deployment or local testing, see `appalpha.R` & `appbeta.R` scripts in githubrepo
+- For custom deployment or local testing, see `appalpha.R` & `appbeta.R` scripts in following github repos
+- Github repo CRF: https://github.com/ddwarabandam/NEMeasleswebCRFalpha.git
+- Github repo ETL: https://github.com/ddwarabandam/NEMeasleswebETLalpha.git
+- Future release version beta in May 2025. Your specific needs and requests feedback will be much appreciated
 
 ---
 
