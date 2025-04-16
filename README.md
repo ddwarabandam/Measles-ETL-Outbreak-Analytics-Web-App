@@ -63,7 +63,7 @@ This prevents app crashes during save even if fields are left blank.
 
 ## 📥 CRF App Instructions
 
-1. Visit the hosted CRF app: https://dattatechddwarabandam.shinyapps.io/NEMeasleswebCRFalpha/
+1. Visit the hosted CRF app: https://dattatechddwarabandam.shinyapps.io/NEMeaslesCRFwebalpha/
 2. Navigate through tabs:  
    - **Case Info**, **Demographics**, **Clinical**, **Exposure/Contact**, **Vaccination**, **Healthcare & Labs**, **Final Status**
 3. Enter data in all fields as per instructions. White space was intentional to allow other apps to open side by side this web app.
