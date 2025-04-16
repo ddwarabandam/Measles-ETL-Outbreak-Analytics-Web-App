@@ -121,17 +121,17 @@ Key Features:
 - 📄 Upload cleaned `.xlsx` file from CRF
 - 📋 Review clean data table
 - 📊 Frequency tables (age group, vaccination status, etc.)
-- 🧠 Rt estimation using `EpiEstim`
-- 📉 14-day projection using fixed or dynamic Rt values
-- 🧩 Scenario modeling: compare multiple Rt scenarios
 - 🧭 Gantt chart: visualizes contagious periods per case
 - 📈 Interactive, stratified epi curves by:
   - Age Group
   - Vaccination Status
   - Sex at Birth
   - Race/Ethnicity
-  - Geography
-  - Exposure Risk
+  - Geography (City, County, State)
+  - Working Case Status & Final Case Status
+- 🧠 Rt estimation using `EpiEstim`
+- 📉 14-day projection using fixed or dynamic Rt values
+- 🧩 Scenario modeling: compare multiple Rt scenarios
 
 ---
 
