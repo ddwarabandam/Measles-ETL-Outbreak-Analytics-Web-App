@@ -132,7 +132,7 @@ ui <- fluidPage(
       tags$div(style = "font-size: 12px; color: gray; text-align: center; padding-bottom: 10px;",
                HTML(paste0(
                  "© 2025 ddwarabandam. All rights reserved. ",
-                 "Designed based on the CDC Measles Standardized Case Investigation Form (",
+                 "Designed for Data Management & Outbreak Analytics of CDC Measles Standardized Case Investigation Form (",
                  "<a href='https://www.cdc.gov/measles/downloads/2024-dvd-measles-investigation-form.pdf' target='_blank'>source</a>). ",
                  "Documentation: ",
                  "<a href='https://github.com/ddwarabandam/NEMeasleswebETLalpha/blob/main/README.md' target='_blank'>README</a>, ",
