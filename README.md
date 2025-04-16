@@ -8,7 +8,7 @@
 - **CRF Repo URL:** https://github.com/ddwarabandam/NEMeasleswebCRFalpha 
 - **ETL App Repo URL:** https://github.com/ddwarabandam/NEMeasleswebETLalpha
 - **Random Data Generator Script Repo:** https://github.com/ddwarabandam/NEMeasleswebETLalpha.git
-- **Live CRF App** : https://dattatechddwarabandam.shinyapps.io/NEMeasleswebCRFalpha/  
+- **Live CRF App** : https://dattatechddwarabandam.shinyapps.io/NEMeaslesCRFwebalpha/
 - **Live ETL App** : https://dattatechddwarabandam.shinyapps.io/NEMeasleswebETLalpha/
 - **CDC Measles CRF** : https://www.cdc.gov/measles/downloads/2024-dvd-measles-investigation-form.pdf
 
