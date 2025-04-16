@@ -127,14 +127,24 @@ ui <- fluidPage(
       h4("Multiple Custom Rt Scenario Projection, 5000 Sims"),
       plotlyOutput("facet_custom_plot", height = "400px"),
 
-      
-     
-      
+      # ⬇️ Footer goes here
+      tags$hr(),
+      tags$div(style = "font-size: 12px; color: gray; text-align: center; padding-bottom: 10px;",
+               HTML(paste0(
+                 "© 2025 ddwarabandam. All rights reserved. ",
+                 "Designed based on the CDC Measles Standardized Case Investigation Form (",
+                 "<a href='https://www.cdc.gov/measles/downloads/2024-dvd-measles-investigation-form.pdf' target='_blank'>source</a>). ",
+                 "Documentation: ",
+                 "<a href='https://github.com/ddwarabandam/NEMeasleswebETLalpha/blob/main/README.md' target='_blank'>README</a>, ",
+                 "<a href='https://github.com/ddwarabandam/NEMeasleswebETLalpha' target='_blank'>ETL App Repo</a>. ",
+                 "<a href='https://github.com/ddwarabandam/NEMeasleswebCRFalpha.git' target='_blank'>CRF App Repo</a>. ",
+                 "<b>ETL Modeling Toolkit – Alpha v1.0</b>")
+               )
+      )
       
     )
   )
 )
-
 
 server <- function(input, output, session) {
   `%||%` <- function(a, b) if (!is.null(a)) a else b
