@@ -397,10 +397,11 @@ Document this in your summary reports so others understand why Rt ends earlier t
 |--------|-------------|
 | Serial Interval (SI) | Time between symptom onset in a primary vs secondary case |
 | Gamma Distribution   | Positively-skewed and non-negative — perfect for SI |
-| Why Gamma? |
-| - Realistic outbreak modeling (e.g., CDC, Wallinga et al.) |
-| - Mean SI ≈ 12 days; SD ≈ 3 days for measles |
-| - Allows flexibility in Rt and projection estimation |
+
+### Why Gamma?
+- Realistic outbreak modeling (e.g., CDC, Wallinga et al.)
+- Mean SI ≈ 12 days; SD ≈ 3 days for measles 
+- Allows flexibility in Rt and projection estimation
 
 ---
 
@@ -435,7 +436,7 @@ These are displayed as separate facets to visualize how projections change based
 
 You can add your own Rt values and give them meaningful labels (e.g., "School Reopening", "Post-PEP").
 
-###💡 Steps to Add Custom Rt Scenarios:
+### 💡 Steps to Add Custom Rt Scenarios:
 
 1. Open the app and scroll to the "Custom Rt Scenario Modeling" section.
 
@@ -475,7 +476,7 @@ These projections help visualize worst-case, expected, and best-case spread unde
 ## 📦 Export and Use
 You can:
 
-- Download, pan, zoom, drag or several other actions on the plot as per Plotly interactive commands permit
+- Download, pan, zoom, drag or do several other actions on the plot as per Plotly interactive commands permit
 
 - Use download png or jpeg plots with labels in briefings or meetings
 
