@@ -1,4 +1,4 @@
-# 📘 Measles Case Data Management & Outbreak Analytics Toolkit
+# 📘 Measles Outbreak Management and Analytics Toolkit
 
 **Author:** Devi Dwarabandam
 --- 
