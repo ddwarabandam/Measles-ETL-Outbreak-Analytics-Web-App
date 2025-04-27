@@ -58,9 +58,9 @@ safe_intersects <- function(a, b) {
 
 
 
-zcta_ne   <- readRDS("zcta_ne.rds")
-county_ne <- readRDS("county_ne.rds") %>%
-  mutate(group = str_to_title(NAME))      # <- add this line
+#zcta_ne   <- readRDS("zcta_ne.rds")
+#county_ne <- readRDS("county_ne.rds") %>%
+ # mutate(group = str_to_title(NAME)) 
 
 
 
@@ -999,37 +999,41 @@ server <- function(input, output, session) {
   
   
 
+  # Safe intersects helper
+  safe_intersects <- function(a, b) {
+    out <- vector("list", length(a))
+    for (i in seq_along(a)) {
+      out[[i]] <- tryCatch(
+        as.integer(sf::st_intersects(a[i], b)),
+        error = function(e) integer(0)
+      )
+    }
+    out
+  }
   
- # state_counties <- reactive({
-  #  counties(state = input$selected_state, cb = TRUE, class = "sf") %>%
-  #    mutate(group = str_to_title(NAME))
- # })
-  
-
-  # Save full built leaflet map inside reactive
+  # Main built leaflet map reactive
   built_leaflet_map <- reactive({
     df <- multi_filtered_df(); req(df)
-   # counties_sf <- state_counties()
     
     # 1. Load Nebraska counties
     ne_counties <- counties(state = "NE", cb = TRUE, class = "sf") %>%
-     mutate(group = str_to_title(NAME))
+      mutate(group = str_to_title(NAME))
     
     # 2. Load case data
     count_df <- df %>%
       filter(!is.na(county)) %>%
       mutate(county = str_to_title(county)) %>%
       group_by(county) %>%
-      summarise(cases = n_distinct(case_id)) %>% 
+      summarise(cases = n_distinct(case_id)) %>%
       mutate(label = case_when(
         cases == 0 ~ "0",
-        cases <  6 ~ "1–5",
+        cases < 6  ~ "1–5",
         TRUE       ~ as.character(cases)
       )) %>%
       rename(group = county)
     
     # 3. Join shapefile with case counts
-    map_data <- ne_counties  %>%
+    map_data <- ne_counties %>%
       left_join(count_df, by = "group") %>%
       replace_na(list(cases = 0, label = "0"))
     
@@ -1040,16 +1044,20 @@ server <- function(input, output, session) {
     neighbor_flags <- lengths(safe_intersects(map_data$geometry, outbreak_geom)) > 0 &
       !(map_data$group %in% outbreak_counties)
     
+    # Assign proper category
     map_data <- map_data %>%
       mutate(
         category = case_when(
           group %in% outbreak_counties ~ "Outbreak County",
-          neighbor_flags               ~ "Surrounding County",
-          TRUE                         ~ "No Cases"
-        ),
+          lengths(safe_intersects(geometry, outbreak_geom)) > 0 ~ "Surrounding County",
+          TRUE ~ "No Cases"
+        )
+      ) %>%
+      mutate(
         popup_text = paste0(
           "<strong>", group, "</strong><br/>",
-          "Outbreak MMR Dose Recommended: ", ifelse(category == "No Cases", "No", "Yes"), "<br/>",
+          "Outbreak MMR Dose Recommended: ",
+          ifelse(category %in% c("Outbreak County", "Surrounding County"), "Yes", "No"), "<br/>",
           "Number of measles cases: ", label
         )
       )
@@ -1070,20 +1078,18 @@ server <- function(input, output, session) {
     label_centroids <- st_centroid(map_data)
     
     # 8. Render map
-    leaflet_object <- leaflet(map_data) %>%
+    leaflet(map_data) %>%
       addProviderTiles("CartoDB.Positron") %>%
       
-      # Nebraska border (bold red outline)
       addPolylines(data = ne_state,
                    color = "red",
                    weight = 4,
                    fill = FALSE,
                    opacity = 1) %>%
       
-      # County polygons with category shading
       addPolygons(
         fillColor   = ~pal(category),
-        color       = "black",        # bold borders
+        color       = "black",
         weight      = 2.5,
         fillOpacity = 0.8,
         label       = ~lapply(popup_text, HTML),
@@ -1095,7 +1101,6 @@ server <- function(input, output, session) {
         )
       ) %>%
       
-      # County labels (larger text)
       addLabelOnlyMarkers(data = label_centroids,
                           label = ~group,
                           labelOptions = labelOptions(
@@ -1110,29 +1115,16 @@ server <- function(input, output, session) {
                             )
                           )) %>%
       
-      # Legend
       addLegend("bottomright", pal = pal, values = ~category,
                 title = "County Category", opacity = 0.95)
-    
-    leaflet_object
-
   })
   
+  # Output map
   output$county_map <- renderLeaflet({
     built_leaflet_map()
   })
   
-  output$download_map_png <- downloadHandler(
-    filename = function() {
-      paste0("measles_map_", Sys.Date(), ".png")
-    },
-    content = function(file) {
-      saveWidget(built_leaflet_map(), "temp_map.html", selfcontained = TRUE)
-      webshot2::webshot("temp_map.html", file = file, vwidth = 1400, vheight = 900, cliprect = "viewport")
-      file.remove("temp_map.html")
-    }
-  )
-  
+
   
   
   
