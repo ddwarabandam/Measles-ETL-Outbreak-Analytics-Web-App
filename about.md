@@ -24,7 +24,8 @@ New features added!
 ### 📎 Resources
 
 - [CDC Measles Investigation Form PDF](https://www.cdc.gov/measles/downloads/2024-dvd-measles-investigation-form.pdf)
-- [Measles Outbreak Analytics Web App GitHub Repo](https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App.git)
+- [Measles Investigation Form Web App AlphaV2.0](https://dattatechddwarabandam.shinyapps.io/Measles-Investigation-Form-WebV2/)
+- [Measles ETL Outbreak Analytics Web App GitHub Repo](https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App.git)
 - [Measles Investigation Web App GitHub Repo](https://github.com/ddwarabandam/Measles-Investigation-Form-Web-App.git)
 - [Read Me](https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App/blob/main/README.md)
 
