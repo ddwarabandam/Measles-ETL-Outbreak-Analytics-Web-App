@@ -1,21 +1,70 @@
-# 📘 Measles Outbreak Management and Analytics Toolkit
+# 📘 Measles Outbreak Management & Analytics Toolkit (New Release Alpha v2.0 & v3.1)
 
 **Author:** Devi Dwarabandam
 --- 
-**Tools:** | CDC Measles CRF | R Shiny App | Excel | Measles CRF | ETL & Modeling | Scenario Projections Dashboard  
-**Last Updated:** April 26, 2025: Current Phase: Testing (Alpha v3.1) | Progress: Research, Design, Development
+**Tools:** | CDC Measles CRF | R Shiny App | Excel | Measles CRF | ETL & Summary Analytics, Outbreak Growth Modeling | 
+| Scenario Projections | Interactive Map | Overview Dashboard | 
+**Last Updated:** April 26, 2025: Current Phase: Testing (Alpha v3.1) | 
 --- 
-- **Investigation Form App Repo URL:** https://github.com/ddwarabandam/NEMeasleswebCRFalpha 
+- **CRF Repo URL:** https://github.com/ddwarabandam/NEMeasleswebCRFalpha 
 - **ETL App Repo URL:** https://github.com/ddwarabandam/NEMeasleswebETLalpha
 - **Random Data Generator Script Repo:** https://github.com/ddwarabandam/NEMeasleswebETLalpha.git
-- **Live Investigation Form App** : https://dattatechddwarabandam.shinyapps.io/NEMeaslesCRFwebalpha/
+- **Live CRF App** : https://dattatechddwarabandam.shinyapps.io/NEMeaslesCRFwebalpha/
 - **Live ETL App** : https://dattatechddwarabandam.shinyapps.io/NEMeaslesETLwebalpha/
-- **CDC Measles Investigation Form** : https://www.cdc.gov/measles/downloads/2024-dvd-measles-investigation-form.pdf
+- **CDC Measles CRF** : https://www.cdc.gov/measles/downloads/2024-dvd-measles-investigation-form.pdf
+
+---
+## 🗂 Overview
+
+This toolkit contains two companion Shiny apps:
+
+- **Investigation Form App (Alpha v2.0)**  
+  Electronic standardized investigation form for rapid measles case data collection.
+
+- **ETL and Outbreak Analytics App (Alpha v3.1)**  
+  ETL, universal multi-filtering, summary statistics, contact management, epidemic curves, outbreak growth trajectory modeling, forecasting, interactive mapping, scenario projections and overview dashboard platform.
+
+Designed for public health epidemiologists, surveillance staff, and outbreak response teams.
+
+---
+
+## 🌟 New Features in Alpha v3.1 (ETL App) and Alpha v2.0 (CRF App)
+
+- **Global multi-variable filters** across all tabs (Overview, Summary Frequencies, Cross-tab, Gantt, EpiCurve, Forecasting, Rt Estimation, Scenario Modeling)
+- **Overview dashboard** with live value boxes, dynamic cross-tables, and cleaned county maps
+- **Interactive Leaflet county maps** with outbreak and surrounding counties shaded differently
+- **Built-in download options** for cleaned datasets and map exports
+- **Distinct case counting (`case_id`)** for accurate analytics across duplications
+- **Faster, cleaner reactive pipelines** improving app performance and stability
+- **Session timeout handling** (CRF app)
+- **Dynamic exposure and contagious period calculations** (ETL app)
+
+---
+**Key Highlights**
+
+Category | What you can do
+--- | ---
+Data intake & cleaning | • Upload the Excel export from the CRF data-entry app. • Auto-convert text → Date → numeric types, derive age_group from either Age or DOB, and classify vacc_status from raw vaccine fields.
+Global filters | • Pick any combination of 18 key variables (e.g., county, working_status, hospitalized) and instantly subset every view of the app. ​
+Cleaned data table | • View the full, filter-aware line list with Excel-style column search boxes and copy/CSV/Excel export buttons. ​
+Summary frequencies      | • Choose 1-many categorical variables and generate a long table of counts (unique case_ids) for each category. ​
+Cross-tabulations        |       • Pre-built table: vacc_status × age_group.• Build any two-way table on demand, with counts de-duplicated by case_id. ​
+Exposure / contagious period explorer | • Automatic ±4-day contagious window & 7-21-day exposure window.• See travel history, household/other contacts, vaccination info and free-text notes in a searchable table. ​
+Gantt chart | • Interactive timeline showing each case’s contagious period as a bar, colour-coded by any chosen variable (e.g., hospitalized). Tool-tips reveal details on hover. ​
+Epidemic curves | • Overall daily incidence bar chart.• Stacked epi-curve stratified by any variable you pick. ​
+Rt estimation | • Bayesian time-varying Rt (EpiEstim) with user-defined mean/SD serial-interval.• Optional pre-filtering (e.g., just “U.S. acquired” cases).• 95 % credible-interval ribbon and mean line. 
+14-day forecasts | • Generate forward incidence projections for the whole or filtered outbreak.• Supply an Rt yourself or let the toolkit borrow the most recent 7-day Rt it just estimated. ​
+Scenario modelling | • Enter multiple comma-separated Rt values (with optional custom labels) and get side-by-side 14-day projections for each scenario. ​
+Geospatial view | • Nebraska county map shaded by case burden (0, 1–5, 6+).• Counties automatically classified as Outbreak, Surrounding, or No Cases; labels & pop-ups summarize counts and MMR-recommendation status.• Download a high-resolution PNG of the map. 
+At-a-glance dashboard | • Value boxes for total cases, hospitalizations, deaths, and number of affected counties.• Quick tables: vaccination status, age-group distribution, cases by county. ​
+About / documentation panel | • In-app “About” tab summarizing purpose, modelling assumptions, GitHub links and CDC form reference. ​
+
+---
 
 
 ---
 
-## 🔍 Overview
+## 🔍 Overview - Alpha v1.0
 
 This public health-ready toolkit is designed to help field epidemiologists, contact tracers, and health department staff with:
 
@@ -28,10 +77,21 @@ Specifically
 - Collecting standardized measles case investigation data
 - Ensuring local and secure data handling
 - Analyzing epidemic trends, vaccination status, Rt estimation, and outbreak projections
-- Facilitating visual reporting via downloadable epidemic curves, Gantt charts, and dynamic scenario models
+- Facilitating visual reporting via downloadable epidemic curves, gantt charts, and dynamic scenario models
 
 ---
 
+## 🚀 Quickstart Instructions (Self-Hosting)
+
+1. Install R and RStudio
+2. Install required packages:
+   ```r
+   install.packages(c("shiny", "leaflet", "sf", "readxl", "tigris", "webshot2", "htmlwidgets", "plotly", "dplyr", "DT", "lubridate", "EpiEstim", "projections", "incidence2", "distcrete", "tidyr"))
+   ```
+3. Clone/download this repository
+4. Run app.R or split ui.R, server.R if needed
+5. Launch locally via RStudio Run App
+---
 ## 📦 App Components
 
 ### 1. Case Report Form (CRF) App
@@ -72,6 +132,17 @@ This prevents app crashes during save even if fields are left blank.
 6. Click **Download Excel** to save the file on your device.
 7. **Important**: Data will be erased if you leave, refresh, or timeout (~15 mins).
 
+**Summary**
+- Stepwise data collection across:
+- Case Identification
+- Demographics
+- Clinical Details
+- Exposure/Contagious Period
+- Vaccination History
+- Healthcare & Laboratory Information
+- Working / Final Case Classification
+- Local session case saving
+- Single / Batch download as Excel file
 ---
 ## 🔁 Appending Multiple Cases
 
@@ -129,10 +200,20 @@ Key Features:
   - Sex at Birth
   - Race/Ethnicity
   - Geography (City, County, State)
-  - Working Case Status & Final Case Status
+  - Working Case Status, Final Case Status & 10 more variables
 - 🧠 Rt estimation using `EpiEstim`
 - 📉 14-day projection using fixed or dynamic Rt values
 - 🧩 Scenario modeling: compare multiple Rt scenarios
+-    Interactive map showing cases on tooltips
+
+**Summary:**
+- Upload CRF-collected data for cleaning and visualization
+- Generate summary statistics across key variables
+- Dynamic epidemic curves (overall and stacked by factors)
+- Reproduction number (Rt) estimation using EpiEstim
+- 14-day projections and scenario modeling with adjustable Rt values
+- Integrated Nebraska county mapping using tigris
+- Exposure period and contagious period timelines per case
 
 ---
 
@@ -143,13 +224,15 @@ Key Features:
 3. Review cleaned data table
 4. Scroll to:
    - **Summary Frequency Tables**
-   - **Vaccination vs Age Cross-tab**
+   - **Vaccination vs Age Fixed & Custom Cross-tab**
    - **Interactive Epidemic Curves**
    - **Gantt Charts of Contagious Period**
    - **Rt Estimation Over Time**
-   - **14-Day Forecast (Fixed Rt = 1.3)**
-   - **Scenario Modeling (Rt = 1.3, 1.5, 1.6)**
-   - **Custom Scenario Inputs**
+   - **14-Day Forecast**
+   - **Custom Scenario Modeling (Pre-set & User defined Rt control)**
+   - **Interactive Map**
+   - **Overview Dashboard**
+   - **About Section**
 
 ---
 
@@ -500,6 +583,19 @@ You can:
 
 ---
 
+## 🛠 Technologies Used
+
+- [Shiny](https://shiny.rstudio.com/) (UI and reactive web app)
+- [leaflet](https://rstudio.github.io/leaflet/) (Mapping)
+- [tigris](https://cran.r-project.org/web/packages/tigris/) (US Census GIS shapefiles)
+- [EpiEstim](https://cran.r-project.org/web/packages/EpiEstim/) (Rt estimation)
+- [projections](https://cran.r-project.org/web/packages/projections/) (Incidence forecasting)
+- [incidence2](https://cran.r-project.org/web/packages/incidence2/) (Epidemic curves)
+- [DT](https://rstudio.github.io/DT/) (Interactive tables)
+- [plotly](https://plotly.com/r/) (Interactive plots)
+- [purrr](https://purrr.tidyverse.org/) (Functional programming pipelines)
+  
+---
 ## 🔗 Data Entry to Analysis Workflow
 
 ```mermaid
