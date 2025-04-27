@@ -7,8 +7,8 @@
 | Forecasting, Scenario Projections | Interactive Mapping | Overview Dashboard | 
 **Last Updated:** April 26, 2025: Current Phase: Testing (Alpha v3.1) | 
 --- 
-- **CRF Repo URL:** https://github.com/ddwarabandam/NEMeasleswebCRFalpha 
-- **ETL App Repo URL:** https://github.com/ddwarabandam/NEMeasleswebETLalpha
+- **Investigation Form Web App Repo URL:** https://github.com/ddwarabandam/Measles-Investigation-Form-Web-App.git
+- **ETL Outbreak Analytics Web App Repo URL:** https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App.git
 - **Random Data Generator Script Repo:** https://github.com/ddwarabandam/NEMeasleswebETLalpha.git
 - **Live CRF App** : https://dattatechddwarabandam.shinyapps.io/NEMeaslesCRFwebalpha/
 - **Live ETL App** : https://dattatechddwarabandam.shinyapps.io/NEMeaslesETLwebalpha/
