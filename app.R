@@ -355,7 +355,7 @@ ui <- fluidPage(
              "<a href='https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App/blob/main/README.md' target='_blank'>README</a>, ",
              "<a href='https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App.git' target='_blank'>ETL Outbreak Analytics Web App Github Repo</a>. ",
              "<a href='https://github.com/ddwarabandam/Measles-Investigation-Form-Web-App.git' target='_blank'> Measles Investigation Web App AlphaV2.0 Github Repo</a>. ",
-             "<a href='https://dattatechddwarabandam.shinyapps.io/Measles-Investigation-Form-WebV2/' target='_blank'> Measles Investigation Web App AlphaV2.0</a>. "
+             "<a href='https://dattatechddwarabandam.shinyapps.io/Measles-Investigation-Form-WebV2/' target='_blank'> Measles Investigation Web App AlphaV2.0</a>. ",
              "<b> Measles Outbreak Management & Analytics Web Apps Toolkit – Alpha v3.1</b>")
            )
            
