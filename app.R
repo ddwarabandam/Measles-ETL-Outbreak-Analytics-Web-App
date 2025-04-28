@@ -1,11 +1,4 @@
-# Global or Top of ETL Outbreak Analytics App.R
-#install.packages("purrr")
-#install.packages("tigris")
-#install.packages("leaflet")
-#install.packages("sf")
-#install.packages(c("webshot2", "htmlwidgets"))
-
-
+# Global top of this ETL Measles Oubreak Analytics app v3.1
 library(shiny)
 library(readxl)
 library(dplyr)
@@ -24,25 +17,26 @@ library(forcats)
 library(ggthemes)
 library(purrr)      # for map_dfr
 library(tibble)     # for tidy tibbles
-library(sf)
-library(leaflet)
 library(RColorBrewer)
-library(leaflet.extras)
 library(ggplot2)
-library(sf)
 library(dplyr)
 library(tidyr)      # for replace_na()
 library(viridis)    # optional for better color palettes
 library(shinydashboard)
 library(stringr)
-library(tigris)
 library(sf)
-library(leaflet)
-library(webshot2)
-library(htmlwidgets)
+library(markdown)
 
 
-options(tigris_use_cache = TRUE)
+
+county_ne <- readRDS("county_ne.rds") %>%
+  filter(STATEFP == "31") %>%
+  mutate(group = str_to_title(NAME))
+
+
+
+
+
 
 # Safe intersects helper
 safe_intersects <- function(a, b) {
@@ -57,10 +51,6 @@ safe_intersects <- function(a, b) {
 }
 
 
-
-#zcta_ne   <- readRDS("zcta_ne.rds")
-#county_ne <- readRDS("county_ne.rds") %>%
- # mutate(group = str_to_title(NAME)) 
 
 
 
@@ -107,9 +97,9 @@ filter_dataset <- function(df, sel) {
 
 
 ui <- fluidPage(
-  titlePanel("Measles Outbreak Management & Analytics ETL Web App (Alpha v2.0)"),
+  titlePanel("Measles Outbreak Management & Analytics ETL Web App (Alpha v3.1)"),
   tags$head(
-  tags$style(HTML("
+    tags$style(HTML("
   .leaflet-control.map-title {
     background: rgba(255,255,255,0.75);
     font-weight: bold;
@@ -119,22 +109,22 @@ ui <- fluidPage(
   }
 
  "))
- ),
-
-
+  ),
+  
+  
   
   # Then your Filters Row
   fluidRow(
-   # column(3,
-         #  selectInput("selected_state", "Select State:", choices = state.abb, selected = "NE")
-   # ),
+    # column(3,
+    #  selectInput("selected_state", "Select State:", choices = state.abb, selected = "NE")
+    # ),
     column(3,
            selectInput("filter_vars", "Filter by Variables:", choices = key_vars, multiple = TRUE, selected = NULL)
     ),
     column(3,
            uiOutput("filter_value_inputs")
     ),
-
+    
   ),
   
   uiOutput("active_filters"),
@@ -144,11 +134,11 @@ ui <- fluidPage(
       fileInput("crf_file", "Upload Measles Case Excel File", 
                 accept = c(".xlsx")),
       helpText("Accepted format: Excel file exported from CRF app (.xlsx)"),
-
+      
       # Fixed scenarios as strings (we'll convert to numeric later)
-     # checkboxGroupInput("fixed_scenarios", "Select Fixed Rt Scenarios:",
-                      #   choices = c("1.3", "1.5", "1.6"),
-                      #   selected = c("1.3", "1.5", "1.6")),
+      # checkboxGroupInput("fixed_scenarios", "Select Fixed Rt Scenarios:",
+      #   choices = c("1.3", "1.5", "1.6"),
+      #   selected = c("1.3", "1.5", "1.6")),
       
       # Inputs for a custom scenario:
       #textInput("custom_label", "Custom Scenario Label", value = "My Custom Scenario"),
@@ -162,7 +152,7 @@ ui <- fluidPage(
     
     mainPanel(
       tabsetPanel(id = "main_tabs",
-
+                  
                   # ─── TAB 1 ──────────────────────────────────────────────
                   tabPanel("Cleaned Case Records",
                            br(),
@@ -184,183 +174,184 @@ ui <- fluidPage(
                                           multiple = TRUE),
                            DTOutput("summary_freq_dt")
                   ),
-      
-      # ─── TAB 3 ──────────────────────────────────────────────
-      tabPanel("Cross‑tabulation",
-               br(),
-               h5("Fixed: Vaccination Status × Age Group"),
-               DTOutput("crosstab_fixed"),
-               
-               hr(),
-               
-               h5("Create your own two‑way table"),
-               fluidRow(
-                 column(6,
-                        selectizeInput("cross_var1", "Row variable:",
-                                       choices = c( "None" ,"vacc_status", "hospitalized", "working_status","final_status",
-                                                    "sex_at_birth","age_group","race","hispanic_latino",
-                                                    "city","county","state_form","residence_country",
-                                                    "outbreak_related","recent_travel",
-                                                    "import_status","us_acquired_detail", "zip" ),
-                                       selected = "vacc_status")
-                 ),
-                 column(6,
-                        selectizeInput("cross_var2", "Column variable:",
-                                       choices = c( "None" ,"vacc_status", "hospitalized", "working_status","final_status",
-                                                   "sex_at_birth","age_group","race","hispanic_latino",
-                                                   "city","county","state_form","residence_country",
-                                                   "outbreak_related","recent_travel",
-                                                   "import_status","us_acquired_detail", "zip" ),
-                                       selected = "age_group")
-                 )
-               ),
-               DTOutput("crosstab_custom")
+                  
+                  # ─── TAB 3 ──────────────────────────────────────────────
+                  tabPanel("Cross‑tabulation",
+                           br(),
+                           h5("Fixed: Vaccination Status × Age Group"),
+                           DTOutput("crosstab_fixed"),
+                           
+                           hr(),
+                           
+                           h5("Create your own two‑way table"),
+                           fluidRow(
+                             column(6,
+                                    selectizeInput("cross_var1", "Row variable:",
+                                                   choices = c( "None" ,"vacc_status", "hospitalized", "working_status","final_status",
+                                                                "sex_at_birth","age_group","race","hispanic_latino",
+                                                                "city","county","state_form","residence_country",
+                                                                "outbreak_related","recent_travel",
+                                                                "import_status","us_acquired_detail", "zip" ),
+                                                   selected = "vacc_status")
+                             ),
+                             column(6,
+                                    selectizeInput("cross_var2", "Column variable:",
+                                                   choices = c( "None" ,"vacc_status", "hospitalized", "working_status","final_status",
+                                                                "sex_at_birth","age_group","race","hispanic_latino",
+                                                                "city","county","state_form","residence_country",
+                                                                "outbreak_related","recent_travel",
+                                                                "import_status","us_acquired_detail", "zip" ),
+                                                   selected = "age_group")
+                             )
+                           ),
+                           DTOutput("crosstab_custom")
+                  ),
+                  
+                  # ─── TAB 4 ──────────────────────────────────────────────
+                  tabPanel("Exposure / Contagious Details",
+                           br(),
+                           DTOutput("exposure_table")
+                  ),
+                  
+                  # ─── TAB 5 ──────────────────────────────────────────────
+                  tabPanel("Gantt Chart",
+                           br(),
+                           selectizeInput("gantt_var", "Colour bars by:",
+                                          choices = c( "None" ,"vacc_status", "hospitalized", "working_status","final_status",
+                                                       "sex_at_birth","age_group","race","hispanic_latino",
+                                                       "city","county","state_form","residence_country",
+                                                       "outbreak_related","recent_travel",
+                                                       "import_status","us_acquired_detail", "zip" ),
+                                          selected = "working_status"),
+                           plotlyOutput("gantt_dynamic", height = "450px")
+                  ),
+                  
+                  # ─── TAB 6 ──────────────────────────────────────────────
+                  tabPanel("Epidemic Curve",
+                           br(),
+                           h5("Overall (no stratification)"),
+                           plotlyOutput("epi_curve_overall", height = "350px"),
+                           
+                           hr(),
+                           h5("Stacked by selected variable"),
+                           selectizeInput("epi_var", "Choose variable:",
+                                          choices = c(  "None" ,"vacc_status", "hospitalized", "working_status","final_status",
+                                                        "sex_at_birth","age_group","race","hispanic_latino",
+                                                        "city","county","state_form","residence_country",
+                                                        "outbreak_related","recent_travel",
+                                                        "import_status","us_acquired_detail", "zip" ),
+                                          selected = "vacc_status"),
+                           plotlyOutput("epi_curve_dynamic", height = "350px")
+                  ),
+                  
+                  # ─── TAB 7 ──────────────────────────────────────────────
+                  tabPanel("Rt Estimation",
+                           br(),
+                           #selectizeInput("rt_filter", "Filter data by:",
+                           #  choices = key_vars, multiple = TRUE),       # see helper below
+                           selectInput("rt_var",   "Filter column:",   choices = key_vars),
+                           uiOutput("rt_val_box"),   # second dropdown appears after a column is chosen
+                           numericInput("rt_mean_si", "Mean serial interval (days):", value = 12),
+                           numericInput("rt_sd_si",   "SD serial interval (days):",   value = 3),
+                           uiOutput("active_filters"),
+                           
+                           plotlyOutput("rt_plot_dynamic", height = "350px")
+                  ),
+                  
+                  # ─── TAB 8 ──────────────────────────────────────────────
+                  tabPanel("Forecasting",
+                           br(),
+                           #selectizeInput("fc_filter", "Filter data by:",
+                           # choices = key_vars, multiple = TRUE),
+                           # TAB 8 – Forecasting
+                           selectInput("fc_var",   "Filter column:",   choices = key_vars),
+                           uiOutput("fc_val_box"),
+                           
+                           numericInput("fc_Rt", "Rt to project with:", value = NA, step = 0.1),
+                           numericInput("fc_mean_si", "Mean serial interval (days):", value = 12),
+                           numericInput("fc_sd_si",   "SD serial interval (days):",   value = 3),
+                           actionButton("run_fc", "Run 14‑day forecast"),
+                           plotlyOutput("forecast_plot", height = "350px"),
+                           uiOutput("active_filters")
+                  ),
+                  
+                  # ─── TAB 9 ──────────────────────────────────────────────
+                  tabPanel("Scenario Modeling",
+                           br(),
+                           #selectizeInput("sc_filter", "Filter data by:",
+                           # choices = key_vars, multiple = TRUE),
+                           # TAB 8 – Scenario Modeling
+                           selectInput("sm_var",   "Filter column:",   choices = key_vars),
+                           uiOutput("sm_val_box"),
+                           textInput("sc_Rt_vals",   "Rt values (comma‑sep):",    "0.9,1.1,1.4"),
+                           textInput("sc_Rt_labels", "Custom labels (⇢ same order, comma‑sep, optional):",
+                                     "Low,Mid,High"),
+                           numericInput("sc_mean_si", "Mean serial interval (days):", value = 12),
+                           numericInput("sc_sd_si",   "SD serial interval (days):",   value = 3),
+                           
+                           actionButton("run_sc", "Generate scenarios"),
+                           plotlyOutput("scenario_plot", height = "350px")
+                  ),
+                  
+                  
+                  
+                  tabPanel("Overview Dashboard",
+                           fluidPage(
+                             tags$h2("Nebraska 2025 Measles Outbreak Dashboard"),
+                             tags$h5(paste("Last updated", format(Sys.Date(), "%d %B %Y"))),
+                             
+                             fluidRow(
+                               valueBoxOutput("total_cases_box", width = 3),
+                               valueBoxOutput("total_hospitalized_box", width = 3),
+                               valueBoxOutput("total_deaths_box", width = 3),
+                               valueBoxOutput("county_count_box", width = 3)
+                             ),
+                             
+                             fluidRow(
+                               box(title = "Vaccination Status Among Cases", width = 5, solidHeader = TRUE,
+                                   DTOutput("crosstab_fixedd")),
+                               box(title = "Cases by Age Group", width = 4, solidHeader = TRUE,
+                                   DTOutput("age_table")),
+                               box(title = "Cases by County at Diagnosis", width = 4, solidHeader = TRUE,
+                                   DTOutput("county_table"))
+                             )
+                           ),
+                           titlePanel("Nebraska Measles Cases Map - Outbreak & Surrounding Counties"),
+                           
+                           plotOutput("county_map_static", height = 850)
+                           
+                           
+                           
+                  ),
+                  
+                  
+                  
+                  # ─── TAB About ──────────────────────────────────────────
+                  tabPanel("About",
+                           br(),
+                           includeMarkdown("about.md")        # keep a tiny markdown file with intro, author, links
+                  )
+                  
+                  
       ),
       
-      # ─── TAB 4 ──────────────────────────────────────────────
-      tabPanel("Exposure / Contagious Details",
-               br(),
-               DTOutput("exposure_table")
-      ),
-      
-      # ─── TAB 5 ──────────────────────────────────────────────
-      tabPanel("Gantt Chart",
-               br(),
-               selectizeInput("gantt_var", "Colour bars by:",
-                              choices = c( "None" ,"vacc_status", "hospitalized", "working_status","final_status",
-                                            "sex_at_birth","age_group","race","hispanic_latino",
-                                            "city","county","state_form","residence_country",
-                                            "outbreak_related","recent_travel",
-                                            "import_status","us_acquired_detail", "zip" ),
-                              selected = "working_status"),
-               plotlyOutput("gantt_dynamic", height = "450px")
-      ),
-      
-      # ─── TAB 6 ──────────────────────────────────────────────
-      tabPanel("Epidemic Curve",
-               br(),
-               h5("Overall (no stratification)"),
-               plotlyOutput("epi_curve_overall", height = "350px"),
+      # ⬇️ Footer goes here
+      tags$hr(),
+      tags$div(style = "font-size: 12px; color: gray; text-align: center; padding-bottom: 10px;",
+               HTML(paste0(
+                 "© 2025 ddwarabandam. All rights reserved. ",
+                 "Designed for Outbreak Management, & rapid analytics of data generated from CDC Measles Standardized Case Investigation Form data (",
+                 "<a href='https://www.cdc.gov/measles/downloads/2024-dvd-measles-investigation-form.pdf' target='_blank'>source</a>). ",
+                 "Documentation: ",
+                 "<a href='https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App/blob/main/README.md' target='_blank'>README</a>, ",
+                 "<a href='https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App.git' target='_blank'>ETL Outbreak Analytics Web App Github Repo</a>. ",
+                 "<a href='https://github.com/ddwarabandam/Measles-Investigation-Form-Web-App.git' target='_blank'> Measles Investigation Web App AlphaV2.0 Github Repo</a>. ",
+                 "<a href='https://dattatechddwarabandam.shinyapps.io/Measles-Investigation-Form-WebV2/' target='_blank'> Measles Investigation Web App AlphaV2.0</a>. ",
+                 "<b> Measles Outbreak Management & Analytics Web Apps Toolkit – Alpha v3.1</b>")
+               )
                
-               hr(),
-               h5("Stacked by selected variable"),
-               selectizeInput("epi_var", "Choose variable:",
-                              choices = c(  "None" ,"vacc_status", "hospitalized", "working_status","final_status",
-                                            "sex_at_birth","age_group","race","hispanic_latino",
-                                            "city","county","state_form","residence_country",
-                                            "outbreak_related","recent_travel",
-                                            "import_status","us_acquired_detail", "zip" ),
-                              selected = "vacc_status"),
-               plotlyOutput("epi_curve_dynamic", height = "350px")
-      ),
-      
-      # ─── TAB 7 ──────────────────────────────────────────────
-      tabPanel("Rt Estimation",
-               br(),
-               #selectizeInput("rt_filter", "Filter data by:",
-                            #  choices = key_vars, multiple = TRUE),       # see helper below
-               selectInput("rt_var",   "Filter column:",   choices = key_vars),
-               uiOutput("rt_val_box"),   # second dropdown appears after a column is chosen
-               numericInput("rt_mean_si", "Mean serial interval (days):", value = 12),
-               numericInput("rt_sd_si",   "SD serial interval (days):",   value = 3),
-               uiOutput("active_filters"),
-               
-               plotlyOutput("rt_plot_dynamic", height = "350px")
-      ),
-      
-      # ─── TAB 8 ──────────────────────────────────────────────
-      tabPanel("Forecasting",
-               br(),
-               #selectizeInput("fc_filter", "Filter data by:",
-                             # choices = key_vars, multiple = TRUE),
-               # TAB 8 – Forecasting
-               selectInput("fc_var",   "Filter column:",   choices = key_vars),
-               uiOutput("fc_val_box"),
-               
-               numericInput("fc_Rt", "Rt to project with:", value = NA, step = 0.1),
-               numericInput("fc_mean_si", "Mean serial interval (days):", value = 12),
-               numericInput("fc_sd_si",   "SD serial interval (days):",   value = 3),
-               actionButton("run_fc", "Run 14‑day forecast"),
-               plotlyOutput("forecast_plot", height = "350px"),
-               uiOutput("active_filters")
-      ),
-      
-      # ─── TAB 9 ──────────────────────────────────────────────
-      tabPanel("Scenario Modeling",
-               br(),
-               #selectizeInput("sc_filter", "Filter data by:",
-                             # choices = key_vars, multiple = TRUE),
-               # TAB 8 – Scenario Modeling
-               selectInput("sm_var",   "Filter column:",   choices = key_vars),
-               uiOutput("sm_val_box"),
-               textInput("sc_Rt_vals",   "Rt values (comma‑sep):",    "0.9,1.1,1.4"),
-               textInput("sc_Rt_labels", "Custom labels (⇢ same order, comma‑sep, optional):",
-                         "Low,Mid,High"),
-               numericInput("sc_mean_si", "Mean serial interval (days):", value = 12),
-               numericInput("sc_sd_si",   "SD serial interval (days):",   value = 3),
-               
-               actionButton("run_sc", "Generate scenarios"),
-               plotlyOutput("scenario_plot", height = "350px")
-      ),
-      
-      
-      
-      tabPanel("Overview Dashboard",
-               fluidPage(
-                 tags$h2("Nebraska 2025 Measles Outbreak Dashboard"),
-                 tags$h5(paste("Last updated", format(Sys.Date(), "%d %B %Y"))),
-                 
-                 fluidRow(
-                   valueBoxOutput("total_cases_box", width = 3),
-                   valueBoxOutput("total_hospitalized_box", width = 3),
-                   valueBoxOutput("total_deaths_box", width = 3),
-                   valueBoxOutput("county_count_box", width = 3)
-                 ),
-                 
-                 fluidRow(
-                   box(title = "Vaccination Status Among Cases", width = 5, solidHeader = TRUE,
-                       DTOutput("crosstab_fixedd")),
-                   box(title = "Cases by Age Group", width = 4, solidHeader = TRUE,
-                       DTOutput("age_table")),
-                   box(title = "Cases by County at Diagnosis", width = 4, solidHeader = TRUE,
-                       DTOutput("county_table"))
-                 )
-               ),
-               titlePanel("Nebraska Measles Outbreak & Surrounding Counties"),
-               
-               leafletOutput("county_map", height = 850)
-               
-               
-      ),
-      
-      
-      
-      # ─── TAB About ──────────────────────────────────────────
-      tabPanel("About",
-               br(),
-               includeMarkdown("about.md")        # keep a tiny markdown file with intro, author, links
       )
-      
-      
-),
-  
-  # ⬇️ Footer goes here
-  tags$hr(),
-  tags$div(style = "font-size: 12px; color: gray; text-align: center; padding-bottom: 10px;",
-           HTML(paste0(
-             "© 2025 ddwarabandam. All rights reserved. ",
-             "Designed for Outbreak Management, & rapid analytics of data generated from CDC Measles Standardized Case Investigation Form data (",
-             "<a href='https://www.cdc.gov/measles/downloads/2024-dvd-measles-investigation-form.pdf' target='_blank'>source</a>). ",
-             "Documentation: ",
-             "<a href='https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App/blob/main/README.md' target='_blank'>README</a>, ",
-             "<a href='https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App.git' target='_blank'>ETL Outbreak Analytics Web App Github Repo</a>. ",
-             "<a href='https://github.com/ddwarabandam/Measles-Investigation-Form-Web-App.git' target='_blank'> Measles Investigation Web App AlphaV2.0 Github Repo</a>. ",
-             "<a href='https://dattatechddwarabandam.shinyapps.io/Measles-Investigation-Form-WebV2/' target='_blank'> Measles Investigation Web App AlphaV2.0</a>. ",
-             "<b> Measles Outbreak Management & Analytics Web Apps Toolkit – Alpha v3.1</b>")
-           )
-           
     )
-   )
   )
 )
 
@@ -711,7 +702,7 @@ server <- function(input, output, session) {
   
   
   
- 
+  
   # ─────────────────────────────────────────────────────────────
   # Helpers -----------------------------------------------------
   
@@ -804,10 +795,10 @@ server <- function(input, output, session) {
     est <- estimate_rt_df(daily,
                           mean_si = input$rt_mean_si %||% 12,
                           sd_si   = input$rt_sd_si   %||% 3)
-
+    
     validate(need(!is.null(est), "Need ≥ 8 daily observations after filtering."))
     
-
+    
     
     
     Rt_df <- as.data.frame(est$R)
@@ -883,17 +874,45 @@ server <- function(input, output, session) {
     sum_df <- proj_summary_df(as.matrix(proj), attr(proj, "dates"))
     
     p <- ggplot(sum_df, aes(date)) +
-      geom_ribbon(aes(ymin = lower, ymax = upper),
-                  fill = "lightblue", alpha = 0.5) +
-      geom_line(aes(y = median), colour = "blue", linewidth = 1.2) +
-      labs(title = paste0("14‑day forecast (Rt = ", round(Rt_val, 2), ")"),
-           x = "Date", y = "Predicted incidence") +
-      theme_minimal()
+      
+      geom_ribbon(
+        aes(ymin = lower, ymax = upper, fill = "95% Credible Interval"),
+        alpha = 0.5
+      ) +
+      
+      geom_line(
+        aes(y = median, color = "Median"),
+        linewidth = 1.2
+      ) +
+      
+      scale_fill_manual(
+        name = "",
+        values = c("95% Credible Interval" = "lightblue")
+      ) +
+      
+      scale_color_manual(
+        name = "",
+        values = c("Median" = "blue")
+      ) +
+      
+      labs(
+        title = paste0("14‑day forecast (Rt = ", round(Rt_val, 2), ")"),
+        x = "Date",
+        y = "Predicted incidence"
+      ) +
+      
+      theme_minimal() +
+      
+      theme(
+        legend.position = "bottom",
+        legend.title = element_blank(),
+        legend.text = element_text(size = 10)
+      )
     
     output$forecast_plot <- renderPlotly({ ggplotly(p) })
   })
   
-    
+  
   observeEvent(input$sm_var, {
     req(input$sm_var)
     df <- isolate(multi_filtered_df())
@@ -907,9 +926,10 @@ server <- function(input, output, session) {
   output$sm_val_box <- renderUI({
     selectizeInput("sm_vals", "Choose value(s):", choices = NULL,
                    multiple = TRUE)
+    
   })
   
-
+  
   # -----------------------------------------------------------------------------
   # Scenario projections --------------------------------------------------------
   observeEvent(input$run_sc, {
@@ -998,133 +1018,118 @@ server <- function(input, output, session) {
   })
   
   
-
-  # Safe intersects helper
-  safe_intersects <- function(a, b) {
-    out <- vector("list", length(a))
-    for (i in seq_along(a)) {
-      out[[i]] <- tryCatch(
-        as.integer(sf::st_intersects(a[i], b)),
-        error = function(e) integer(0)
-      )
-    }
-    out
-  }
   
-  # Main built leaflet map reactive
-  built_leaflet_map <- reactive({
+  output$county_map_static <- renderPlot({
     df <- multi_filtered_df(); req(df)
     
-    # 1. Load Nebraska counties
-    ne_counties <- counties(state = "NE", cb = TRUE, class = "sf") %>%
-      mutate(group = str_to_title(NAME))
-    
-    # 2. Load case data
+    # Prepare case data
     count_df <- df %>%
       filter(!is.na(county)) %>%
       mutate(county = str_to_title(county)) %>%
-      group_by(county) %>%
-      summarise(cases = n_distinct(case_id)) %>%
-      mutate(label = case_when(
-        cases == 0 ~ "0",
-        cases < 6  ~ "1–5",
-        TRUE       ~ as.character(cases)
-      )) %>%
+      count(county, name = "cases") %>%
       rename(group = county)
     
-    # 3. Join shapefile with case counts
-    map_data <- ne_counties %>%
+    # Join with county shapefile
+    map_data <- county_ne %>%
       left_join(count_df, by = "group") %>%
-      replace_na(list(cases = 0, label = "0"))
+      mutate(cases = replace_na(cases, 0))
     
-    # 4. Identify outbreak and surrounding counties
+    # Identify outbreak counties
     outbreak_counties <- map_data %>% filter(cases > 0) %>% pull(group)
-    outbreak_geom <- map_data %>% filter(group %in% outbreak_counties) %>% st_union()
     
-    neighbor_flags <- lengths(safe_intersects(map_data$geometry, outbreak_geom)) > 0 &
+    # Union outbreak geometries
+    outbreak_geom <- map_data %>% filter(group %in% outbreak_counties) %>% sf::st_union()
+    
+    # Fix topology (buffer zero) before neighbor analysis
+    map_data <- map_data %>%
+      mutate(geometry = sf::st_buffer(geometry, dist = 0))
+    
+    # Now identify neighbors safely
+    neighbor_flags <- lengths(sf::st_relate(map_data, outbreak_geom, pattern = "F***T****")) > 0 &
       !(map_data$group %in% outbreak_counties)
     
-    # Assign proper category
+    
+    # Assign categories
     map_data <- map_data %>%
       mutate(
         category = case_when(
           group %in% outbreak_counties ~ "Outbreak County",
-          lengths(safe_intersects(geometry, outbreak_geom)) > 0 ~ "Surrounding County",
-          TRUE ~ "No Cases"
-        )
-      ) %>%
-      mutate(
-        popup_text = paste0(
-          "<strong>", group, "</strong><br/>",
-          "Outbreak MMR Dose Recommended: ",
-          ifelse(category %in% c("Outbreak County", "Surrounding County"), "Yes", "No"), "<br/>",
-          "Number of measles cases: ", label
+          neighbor_flags ~ "Surrounding County",
+          TRUE ~ "None"
         )
       )
     
-    # 5. Build palette
-    pal <- colorFactor(
-      palette = c("Outbreak County" = "#f05e23",
-                  "Surrounding County" = "#2c7fb8",
-                  "No Cases" = "#ffffff"),
-      domain = c("Outbreak County", "Surrounding County", "No Cases")
-    )
+    # Prepare label text with clean coordinates
+    label_centroids <- map_data %>%
+      st_point_on_surface() %>%
+      mutate(
+        label_text = if_else(
+          cases < 6 & cases > 0,
+          paste0(group, " (1-5)"),
+          paste0(group, " (", cases, ")")
+        ),
+        label_x = st_coordinates(geometry)[,1],
+        label_y = st_coordinates(geometry)[,2]
+      )
     
-    # 6. Nebraska state outline
-    ne_state <- states(cb = TRUE, class = "sf") %>%
-      filter(STUSPS == "NE")
-    
-    # 7. Labels data
-    label_centroids <- st_centroid(map_data)
-    
-    # 8. Render map
-    leaflet(map_data) %>%
-      addProviderTiles("CartoDB.Positron") %>%
+    # Build ggplot map
+    ggplot(map_data) +
       
-      addPolylines(data = ne_state,
-                   color = "red",
-                   weight = 4,
-                   fill = FALSE,
-                   opacity = 1) %>%
+      geom_sf(aes(fill = category), color = "black", size = 0.3) +
       
-      addPolygons(
-        fillColor   = ~pal(category),
-        color       = "black",
-        weight      = 2.5,
-        fillOpacity = 0.8,
-        label       = ~lapply(popup_text, HTML),
-        highlight = highlightOptions(
-          weight = 3,
-          color = "#333",
-          fillOpacity = 0.9,
-          bringToFront = TRUE
-        )
-      ) %>%
+      geom_text(
+        data = label_centroids,
+        aes(
+          x = label_x,
+          y = label_y,
+          label = label_text
+        ),
+        size = 4,
+        color = "black",
+        fontface = "bold",
+        family = "Arial"
+      ) +
       
-      addLabelOnlyMarkers(data = label_centroids,
-                          label = ~group,
-                          labelOptions = labelOptions(
-                            noHide = TRUE,
-                            direction = "center",
-                            textOnly = TRUE,
-                            style = list(
-                              "color" = "#000000",
-                              "font-family" = "Arial",
-                              "font-size" = "12px",
-                              "font-weight" = "bold"
-                            )
-                          )) %>%
+      scale_fill_manual(
+        values = c(
+          "Outbreak County" = "#fdae61",   # Orange
+          "Surrounding County" = "#abd9e9", # Light Blue
+          "None" = "#ffffff"               # White
+        ),
+        name = "Case Status",
+        na.value = "#ffffff"
+      ) +
       
-      addLegend("bottomright", pal = pal, values = ~category,
-                title = "County Category", opacity = 0.95)
+      labs(
+        title = "Nebraska Counties with Measles Cases and Surrounding Counties",
+        subtitle = "For Outbreak MMR Vaccine Recommendations",
+        caption = paste0("(last updated ", format(Sys.Date(), "%d %B %Y"), ")")
+      ) +
+      
+      theme_minimal(base_family = "Arial") +
+      
+      theme(
+        plot.title = element_text(hjust = 0.5, size = 20, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 14),
+        plot.caption = element_text(hjust = 0.5, size = 10, face = "italic"),
+        legend.position = "bottom",
+        legend.title = element_text(size = 12, face = "bold"),
+        legend.text = element_text(size = 10),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(colour = "black", fill=NA, size=1)
+      )
   })
   
-  # Output map
-  output$county_map <- renderLeaflet({
-    built_leaflet_map()
-  })
   
-
+  
+  
+  
+  
+  
   
   
   
@@ -1197,7 +1202,7 @@ server <- function(input, output, session) {
                 }), collapse = "<br/>")))
   })
   
- 
+  
 }
 
 
