@@ -1,4 +1,4 @@
-# 📘 Measles Outbreak Management & Analytics Toolkit (New Release Alpha v2.0 & v3.1)
+# 📘 Measles Outbreak Management & Analytics Web Apps Toolkit (New Release Alpha v2.0 & v3.1)
 
 **Author:** Devi Dwarabandam
 --- 
@@ -10,7 +10,7 @@
 - **Investigation Form Web App Repo URL:** https://github.com/ddwarabandam/Measles-Investigation-Form-Web-App.git
 - **ETL Outbreak Analytics Web App Repo URL:** https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App.git
 - **Random Data Generator Script Repo:** https://github.com/ddwarabandam/NEMeasleswebETLalpha.git
-- **Live Measles Investigation CRF App** : https://dattatechddwarabandam.shinyapps.io/NEMeaslesCRFwebalpha/
+- **Live Measles Investigation CRF App** : https://dattatechddwarabandam.shinyapps.io/Measles-Investigation-Form-WebV2/
 - **Live ETL Measles Outbreak Analytics App** : https://dattatechddwarabandam.shinyapps.io/MeaslesOubreakAnalyticsWebAlpha/
 - **CDC Measles CRF** : https://www.cdc.gov/measles/downloads/2024-dvd-measles-investigation-form.pdf
 
@@ -33,11 +33,11 @@ Designed for public health epidemiologists, surveillance staff, and outbreak res
 
 - **Global multi-variable filters** across all tabs (Overview, Summary Frequencies, Cross-tab, Gantt, EpiCurve, Forecasting, Rt Estimation, Scenario Modeling)
 - **Overview dashboard** with live value boxes, dynamic cross-tables, and cleaned county maps
-- **Interactive Leaflet county maps** with outbreak and surrounding counties shaded differently
+- **Static county maps** with outbreak and surrounding counties shaded differently
 - **Built-in download options** for cleaned datasets and map exports
 - **Distinct case counting (`case_id`)** for accurate analytics across duplications
 - **Faster, cleaner reactive pipelines** improving app performance and stability
-- **Session timeout handling** (CRF app)
+- **Session timeout handling** (CRF app) : 15 mins alert
 - **Dynamic exposure and contagious period calculations** (ETL app)
 
 ---
@@ -87,7 +87,7 @@ Specifically
 1. Install R and RStudio
 2. Install required packages:
    ```r
-   install.packages(c("shiny", "leaflet", "sf", "readxl", "tigris", "webshot2", "htmlwidgets", "plotly", "dplyr", "DT", "lubridate", "EpiEstim", "projections", "incidence2", "distcrete", "tidyr"))
+   install.packages(c("shiny", "sf", "readxl", "plotly", "dplyr", "DT", "lubridate", "EpiEstim", "projections", "incidence2", "distcrete", "tidyr")) # Note: Please insert all the required libraries list from this README document.
    ```
 3. Clone/download this repository
 4. Run app.R or split ui.R, server.R if needed
@@ -107,7 +107,7 @@ Used for **data collection** during interviews with suspected/confirmed measles 
 - 🔹 **Data auto-deletes on refresh, timeout, or tab closure**
 
 **❗ Session Security**:  
-All data is held **in memory only** and **purged** immediately on:
+All data is held **in device read access memory (RAM) only** and **purged** immediately on:
 - Browser refresh
 - Tab close
 - Inactivity timeout (~15 mins)
@@ -124,7 +124,7 @@ This prevents app crashes during save even if fields are left blank.
 
 ## 📥 CRF App Instructions
 
-1. Visit the hosted CRF app: https://dattatechddwarabandam.shinyapps.io/NEMeaslesCRFwebalpha/
+1. Visit the hosted CRF app: https://dattatechddwarabandam.shinyapps.io/Measles-Investigation-Form-WebV2/
 2. Navigate through tabs:  
    - **Case Info**, **Demographics**, **Clinical**, **Exposure/Contact**, **Vaccination**, **Healthcare & Labs**, **Final Status**
 3. Enter data in all fields as per instructions. White space was intentional to allow other apps to open side by side this web app.
@@ -134,7 +134,7 @@ This prevents app crashes during save even if fields are left blank.
 7. **Important**: Data will be erased if you leave, refresh, or timeout (~15 mins).
 
 **Summary**
-- Stepwise data collection across:
+- Stepwise data collection across all tabs
 - Case Identification
 - Demographics
 - Clinical Details
@@ -155,7 +155,7 @@ Each CRF case is saved as a separate Excel file. To combine cases:
 ---
 ## ✅ 📦 R Script to Auto-Append Multiple Excel Files
 ### 🧰 How to Use It
-- Go to github repo: https://github.com/ddwarabandam/NEMeasleswebETLalpha.git
+- Go to github repo: https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App.git
 - Find the R script: R_Script_Auto_Append.R
 - Copy and paste in RStudio or R console
 - Insert your file path in 
@@ -186,7 +186,7 @@ If you'd rather stay inside Excel:
 - Click Close & Load to save into a workbook
 
 
-## 2. ETL & Modeling App
+## 2. ETL & Modeling App v1.0
 
 Used for **uploading and analyzing CRF data files** (.xlsx).
 
@@ -205,7 +205,7 @@ Key Features:
 - 🧠 Rt estimation using `EpiEstim`
 - 📉 14-day projection using fixed or dynamic Rt values
 - 🧩 Scenario modeling: compare multiple Rt scenarios
--    Interactive map showing cases on tooltips
+-    Static map showing cases and surrounding counties - public health ready
 
 **Summary:**
 - Upload CRF-collected data for cleaning and visualization
@@ -220,7 +220,7 @@ Key Features:
 
 ## 📊 ETL App Instructions
 
-1. Visit the ETL app: https://dattatechddwarabandam.shinyapps.io/NEMeaslesETLwebalpha/
+1. Visit the ETL app: https://dattatechddwarabandam.shinyapps.io/MeaslesOubreakAnalyticsWebAlpha/
 2. Upload the combined_cases.xlsx Excel file(s) appended after downloading the case files from CRF app
 3. Review cleaned data table
 4. Scroll to:
@@ -234,7 +234,7 @@ Key Features:
    - **Interactive Map**
    - **Overview Dashboard**
    - **About Section**
-
+**Note:** Do not forget to use the global filters at the top.
 ---
 
 ## 🔁 Case Re-Entry or Follow-up Workflow
@@ -253,7 +253,7 @@ If a case needs follow-up data entry (e.g., now confirmed or hospitalized), the 
 
 ## ❌ In-App Table Edits Not Allowed
 
-To **ensure data integrity**, the ETL Viewer does **not support editing** directly in the table. Only designated data managers with secure access to the Excel master file are permitted to:
+To **ensure data integrity**, the ETL Outbreak Analytics app case table viewer does **not support editing** directly in the table. Only designated data managers with secure access to the Excel master file are permitted to:
 
 - Manually review/clean using Excel filters
 - Apply validation rules and formulas
@@ -705,9 +705,9 @@ flowchart TD
 - Written in **R + Shiny**  
 - Uses `{plotly}`, `{ggplot2}`, `{DT}`, `{EpiEstim}`, `{projections}`, `{incidence}`, see packages list above  
 - For custom deployment or local testing, see `appalpha.R` & `appbeta.R` scripts in following github repos
-- Github repo CRF: https://github.com/ddwarabandam/NEMeasleswebCRFalpha.git
-- Github repo ETL: https://github.com/ddwarabandam/NEMeasleswebETLalpha.git
-- Future release version beta in May 2025. Your specific needs and requests feedback will be much appreciated
+- Github repo Measles Investigation Form CRF: https://github.com/ddwarabandam/Measles-Investigation-Form-Web-App.git
+- Github repo ETL Measles Outbreak Analytics: https://github.com/ddwarabandam/Measles-ETL-Outbreak-Analytics-Web-App.git
+- Future release version beta in May 2025. Your specific needs and requests feedback will be used to improve this toolkit and very much appreciated to benefit the public health analytics.
 
 ---
 
@@ -718,9 +718,9 @@ Conceptualized, Developed & Maintained by: **Dr. Devi Dwarabandam, MPH, a-IPC, B
 Epidemiologist & R Developer, NACCHO Disease Forecasting & Outbreak Analytics Grant Recipient  
 📧 `devi.dwarabandam@gmail.com`
 - Inspired by: WHO Outbreak Management Tools
-- Special thanks to **Executive Director - Dr Michele Bever, South Heartland District Health Department**  
+- Special thanks to **Executive Director - Dr Michele Bever, South Heartland District Health Department** for constant support and encouragement. 
 - Built using open-source packages from the **R Epidemics Consortium (RECON)**
   
-## ⚠️ This app is provided as-is for public health data management, analytics and decision support. The developer is not responsible for any issues arising from unauthorized modifications or derivative reproductions. Accountability for use, data handling, and deployment lies solely with the deploying user or team.
+## ⚠️ This app is provided as-is for public health data management, analytics and decision support. The developer is not responsible for any issues arising from unauthorized modifications or derivative reproductions. Accountability for use, data handling, and deployment lies solely with the deploying user or team, unless used as-is.
 
 --- 
