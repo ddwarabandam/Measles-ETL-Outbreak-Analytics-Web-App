@@ -4,7 +4,7 @@
 --- 
 **Tools:** | CDC Measles Investigation Form | R Shiny App | Excel | ETL -> 
 | Summary Analytics, Cross Tabulations |  Outbreak Growth Modeling | 
-| Forecasting, Scenario Projections | Interactive Mapping | Overview Dashboard | 
+| Forecasting, Scenario Projections | County Mapping | Overview Dashboard | 
 **Last Updated:** April 26, 2025: Current Phase: Testing (Alpha v3.1) | 
 --- 
 - **Investigation Form Web App Repo URL:** https://github.com/ddwarabandam/Measles-Investigation-Form-Web-App.git
@@ -23,7 +23,7 @@ This toolkit contains two companion Shiny apps:
   Electronic standardized investigation form for rapid measles case data collection.
 
 - **ETL and Outbreak Analytics App (Alpha v3.1)**  
-  ETL, universal multi-filtering, summary statistics, contact management, epidemic curves, outbreak growth trajectory modeling, forecasting, interactive mapping, scenario projections and overview dashboard platform.
+  ETL, universal multi-filtering, summary statistics, contact management, epidemic curves, outbreak growth trajectory modeling, forecasting, outbreak county mapping, scenario projections and overview dashboard platform.
 
 Designed for public health epidemiologists, surveillance staff, and outbreak response teams.
 
@@ -231,7 +231,7 @@ Key Features:
    - **Rt Estimation Over Time**
    - **14-Day Forecast**
    - **Custom Scenario Modeling (Pre-set & User defined Rt control)**
-   - **Interactive Map**
+   - **County Mapping**
    - **Overview Dashboard**
    - **About Section**
 **Note:** Do not forget to use the global filters at the top.
